@@ -1,27 +1,30 @@
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { promisify } from 'util';
+import { breakPath, compare } from '@/common/utils';
+import { Record } from '@/types/global.types';
 
 const router = Router();
 
+// const root = '/home/makar2/Downloads/_watch';
+process.env.VIDEOS_ROOT = '/home/makar2/_apps/local-area-streamer/videos';
+const root = process.env.VIDEOS_ROOT || '/dev/null';
+
 router.get('*mp4/player', async (req, res) => {
-  const regex = /(.*.mp4)\/player/;
+  const { name, pathArr, progressFilePath } = breakPath(req.path);
 
-  const root = '/home/makar2/_apps/local-area-streamer/videos';
+  let startTime = 0;
+  if (fs.existsSync(progressFilePath)) {
+    const progressFile = JSON.parse(fs.readFileSync(progressFilePath).toString());
+    const record = progressFile.find((el: Record) => el.name === name);
+    if (record) startTime = record.time;
+  }
 
-  const urlFinal = regex.exec(req.path)?.[1] || '';
-  const pathArr = urlFinal.split('/');
-
-  const src = path.join(root, ...pathArr);
-
-  // res.render('player', { src: pathArr });
-  res.render('player', { src: urlFinal, startTime: 3 });
+  const src = path.join('/', ...pathArr);
+  res.render('player', { src, startTime });
 });
 
 router.get('*mp4', async (req, res) => {
-  const root = '/home/makar2/_apps/local-area-streamer/videos';
-
   const pathArr = req.path.split('/');
 
   const src = path.join(root, ...pathArr);
@@ -39,14 +42,35 @@ router.get('*mp4', async (req, res) => {
 });
 
 router.post('/progress-tracker', async (req, res) => {
-  console.log(req.body?.path);
+  const { time, pathStr } = req.body;
+
+  if (time && pathStr) {
+    const { name, progressFilePath } = breakPath(pathStr);
+
+    const initial: Record[] = fs.existsSync(progressFilePath)
+      ? JSON.parse(fs.readFileSync(progressFilePath).toString())
+      : [];
+
+    const newRecord = { name, time };
+    const existing: Record | undefined = initial.find((el: Record) => el.name === name);
+
+    let newFile = [];
+    if (existing) {
+      const filtered = initial.filter((el: Record) => el.name !== name);
+      newFile = [...filtered, newRecord];
+    }
+    else newFile = [...initial, newRecord];
+
+    const newFileSorted = newFile.sort(compare);
+    const newFileFinal = JSON.stringify(newFileSorted, null, 2);
+
+    fs.writeFileSync(progressFilePath, newFileFinal);
+  }
 
   res.json(['time-tracker']);
 });
 
 router.get('*', async (req, res) => {
-  const root = '/home/makar2/Downloads/_watch';
-
   // const pathInitial: any = Object.values(req.params)[0];
   // const pathArr = pathInitial.split('/');
   // return res.send(path.join(root, ...pathArr));

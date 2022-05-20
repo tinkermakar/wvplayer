@@ -6,7 +6,7 @@
     "build": "tsc --build --watch",
     "serve": "ts-node -r tsconfig-paths/register ./dist/bin/www.js",
     "start": "nodemon --watch src/ -e ts --exec 'tsc && npm run serve'",
-    "debug": "PORT=3001 npm start",
+    "debug": "PORT=3000 npm start",
     "lint": "eslint './src/**/*.ts'"
   },
   "dependencies": {

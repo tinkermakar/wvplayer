@@ -41,7 +41,7 @@ const server = createServer(app);
  * Get port from environment and store in Express.
  */
 
-const PORT = normalizePort(process.env.PORT || '3001');
+const PORT = normalizePort(process.env.PORT || '3000');
 app.set('port', PORT);
 
 /**
