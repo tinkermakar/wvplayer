@@ -29,7 +29,7 @@
         },
         body: JSON.stringify({
           time: memorizedTime,
-          path: location.pathname
+          pathStr: location.pathname
         })
       });
       console.log(await response.json());

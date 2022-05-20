@@ -6,7 +6,6 @@ import logger from 'morgan';
 
 import { Err } from '@/types/global.types';
 import indexRouter from './routes/index';
-import usersRouter from './routes/users';
 
 const app = express();
 
@@ -24,7 +23,6 @@ app.use(express.static(join(__dirname, '..', 'src', 'public')));
 
 app.get('/favicon.ico', (req, res) => res.status(204));
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next: NextFunction) => {
