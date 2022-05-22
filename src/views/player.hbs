@@ -1,5 +1,6 @@
 <video id="video-main" controls>
   <source src="{{src}}" type="video/mp4">
+  {{!-- <track label="English subtitles" kind="subtitles" srclang="en" src="/static/the-web-is-always-changing.vtt" default=""> --}}
 </video>
 
 <script>
@@ -32,4 +33,10 @@
       console.log(await response.json());
     }
   }, 5000);
+
+
+  // Keyboard shortcuts
+  const focuser = () => video.focus();
+  document.addEventListener('keydown', focuser);
+  document.addEventListener('click', focuser);
 </script>
