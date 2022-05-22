@@ -1,4 +1,36 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<h1>File Browser</h1>
 
-<a href="{{url}}">link</a>
+<h2>Breadcrumb</h2>
+<ul>
+  {{#each breadcrumb}}
+    <li><a href="{{this.url}}">{{this.name}}</a></li>
+  {{/each}}
+</ul>
+
+<h2>Directories</h2>
+
+<ul>
+  {{#each directories}}
+    <li><a href="{{this.url}}">{{this.name}}</a></li>
+  {{/each}}
+</ul>
+
+<h2>Videos</h2>
+
+<ul>
+  {{#each videos}}
+    <li><a href="{{this.url}}">{{this.name}}</a></li>
+  {{/each}}
+</ul>
+
+<h2>Other</h2>
+<ul>
+  {{#each other}}
+    <li><a href="{{this.url}}">{{this.name}}</a></li>
+  {{/each}}
+</ul>
+
+
+<script>
+  console.log(location);
+</script>
