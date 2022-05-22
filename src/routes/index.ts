@@ -1,14 +1,10 @@
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { breakPath, compare } from '@/common/utils';
+import { breakPath, compare, breadcrumbMaker } from '@/common/utils';
 import { Record } from '@/types/global.types';
 
 const router = Router();
-
-// const root = '/home/makar2/Downloads/_watch';
-process.env.VIDEOS_ROOT = '/home/makar2/_apps/local-area-streamer/videos';
-const root = process.env.VIDEOS_ROOT || '/dev/null';
 
 router.get('*mp4/player', async (req, res) => {
   const { name, pathArr, progressFilePath } = breakPath(req.path);
@@ -25,10 +21,8 @@ router.get('*mp4/player', async (req, res) => {
 });
 
 router.get('*mp4', async (req, res) => {
-  const pathArr = req.path.split('/');
-
-  const src = path.join(root, ...pathArr);
-
+  const { pathArr } = breakPath(req.path);
+  const src = path.join(process.env.ROOT_DIR || '/dev/null', ...pathArr);
   const stat = fs.statSync(src);
   const fileSize = stat.size;
 
@@ -71,24 +65,38 @@ router.post('/progress-tracker', async (req, res) => {
 });
 
 router.get('*', async (req, res) => {
-  // const pathInitial: any = Object.values(req.params)[0];
-  // const pathArr = pathInitial.split('/');
-  // return res.send(path.join(root, ...pathArr));
-  const pathArr = req.path.split('/');
+  const webPath = req.path === '/'
+    ? ''
+    : decodeURI(req.path);
+  const fullPath = path.join(process.env.ROOT_DIR || '/dev/null', webPath);
+  if (fs.existsSync(fullPath)) {
+    const ls = fs.readdirSync(fullPath);
+    const lsPlus = ls.map(name => {
+      const isDir = !fs.statSync(path.join(fullPath, name)).isFile();
+      const isVideo = !isDir && name.endsWith('.mp4');
 
-  return res.render('index', { url: path.join(root, ...pathArr, 'xyz') });
+      // eslint-disable-next-line no-nested-ternary
+      const url = isDir
+        ? `${webPath}/${name}`
+        : isVideo
+          ? `${webPath}/${name}/player`
+          : null;
 
-  // const readdirAsync = promisify(fs.readdir);
-  // const writeFileAsync = promisify(fs.writeFile);
+      return { name, isDir, isVideo, url };
+    });
 
-  const ls = await fs.readdirSync(root);
-  ls.push('../lambda-workflows-controller-dev-4c331e86-2c32-46a7-89d7-09a33258e669.zip');
+    const directories = lsPlus.filter(el => el.isDir);
+    const videos = lsPlus.filter(el => el.isVideo);
+    const other = lsPlus.filter(el => !el.isDir && !el.isVideo);
 
-  const output = ls.map(el => {
-    const isFile = fs.statSync(path.join(root, el)).isFile();
-    return { file: el, isFile };
-  });
-  res.json(output);
+    const breadcrumb = breadcrumbMaker(webPath);
+    console.log(JSON.stringify(breadcrumb, null, 2));
+
+    const output: any = { breadcrumb, directories, videos, other };
+    // console.info(output);
+    return res.render('index', output);
+  }
+  return res.send('Wrong Way!');
 });
 
 export default router;
