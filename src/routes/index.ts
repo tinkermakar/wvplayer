@@ -90,8 +90,6 @@ router.get('*', async (req, res) => {
     const other = lsPlus.filter(el => !el.isDir && !el.isVideo);
 
     const breadcrumb = breadcrumbMaker(webPath);
-    console.log(JSON.stringify(breadcrumb, null, 2));
-
     const output: any = { breadcrumb, directories, videos, other };
     // console.info(output);
     return res.render('index', output);
