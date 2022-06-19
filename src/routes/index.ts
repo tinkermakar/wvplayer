@@ -20,19 +20,38 @@ router.get('*mp4/player', async (req, res) => {
   res.render('player', { src, startTime });
 });
 
+// Took from: https://github.com/thesmartcoder7/video_streaming_server
 router.get('*mp4', async (req, res) => {
   const { pathArr } = breakPath(req.path);
   const src = path.join(process.env.ROOT_DIR || '/dev/null', ...pathArr);
-  const stat = fs.statSync(src);
-  const fileSize = stat.size;
+  const videoSize = fs.statSync(src).size;
 
-  const head = {
-    'Content-Length': fileSize,
-    'Content-Type': 'video/mp4',
-    'Accept-Ranges': 'bytes',
-  };
-  res.writeHead(200, head);
-  fs.createReadStream(src).pipe(res);
+  const { range } = req.headers;
+  if (range) {
+    const CHUNK_SIZE = 10 ** 6; // 1MB
+    const start = Number(range?.replace(/\D/g, ''));
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+    const contentLength = end - start + 1;
+
+    const head1 = {
+      'Content-Type': 'video/mp4',
+      'Accept-Ranges': 'bytes',
+      'Content-Range': `bytes ${start}-${end}/${videoSize}`,
+      'Content-Length': contentLength,
+    };
+
+    res.writeHead(206, head1);
+    fs.createReadStream(src, { start, end }).pipe(res);
+  }
+  else {
+    const head2 = {
+      'Content-Type': 'video/mp4',
+      'Accept-Ranges': 'bytes',
+      'Content-Length': videoSize,
+    };
+    res.writeHead(200, head2);
+    fs.createReadStream(src).pipe(res);
+  }
 });
 
 router.post('/progress-tracker', async (req, res) => {
