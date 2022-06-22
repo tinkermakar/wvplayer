@@ -17,6 +17,8 @@ module.exports = {
     'import',
   ],
   rules: {
+    'no-restricted-globals': 0,
+
     // v.1.4 (2021-09-20)
     '@typescript-eslint/no-explicit-any': 0,
     'arrow-parens': [1, 'as-needed'],

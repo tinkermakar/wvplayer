@@ -10,6 +10,7 @@ a {
 }
 
 video {
+  max-height: 100vh;
   outline: 0;
   width: 100%;
 }

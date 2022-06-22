@@ -4,39 +4,6 @@
 </video>
 
 <script>
-  // Pass a start time, if provided
-  const video = document.getElementById('video-main');
-  video.currentTime = {{startTime}};
-
-  // Save the time every 5 seconds
-  let memorizedTime = {{startTime}};
-  let timeOnFile = {{startTime}};
-  setInterval(async () => {
-    // Memorize every 5 seconds
-    const newTime = Math.floor(video.currentTime);
-    if (newTime !== memorizedTime) memorizedTime = newTime;
-  
-    // Write to file every 15 seconds
-    console.log(memorizedTime, timeOnFile, memorizedTime >= timeOnFile + 15)
-    if (memorizedTime >= timeOnFile + 15) { // TODO make it 30?
-      timeOnFile = memorizedTime;
-      const response = await fetch('/progress-tracker', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          time: memorizedTime,
-          pathStr: location.pathname
-        })
-      });
-      console.log(await response.json());
-    }
-  }, 5000);
-
-
-  // Keyboard shortcuts
-  const focuser = () => video.focus();
-  document.addEventListener('keydown', focuser);
-  document.addEventListener('click', focuser);
+  const startTime2 = {{ startTime }}
 </script>
+<script src="/scripts/player.js"></script>
