@@ -18,7 +18,7 @@ export const breakPath = (pathStr: string): BrokenPath => {
   }
 
   const name = pathArr[pathArr.length - 1];
-  const progressFilePath = path.join(process.env.ROOT_DIR || '/dev/null', ...pathArr, '..', 'progress.json');
+  const progressFilePath = path.join(process.env.LAST_ROOT_DIR || '/dev/null', ...pathArr, '..', 'progress.json');
 
   return { name, pathArr, progressFilePath };
 };

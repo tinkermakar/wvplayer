@@ -23,7 +23,7 @@ router.get('*mp4/player', async (req, res) => {
 // Took from: https://github.com/thesmartcoder7/video_streaming_server
 router.get('*mp4', async (req, res) => {
   const { pathArr } = breakPath(req.path);
-  const src = path.join(process.env.ROOT_DIR || '/dev/null', ...pathArr);
+  const src = path.join(process.env.LAST_ROOT_DIR || '/dev/null', ...pathArr);
   const videoSize = fs.statSync(src).size;
 
   const { range } = req.headers;
@@ -87,7 +87,7 @@ router.get('*', async (req, res) => {
   const webPath = req.path === '/'
     ? ''
     : decodeURI(req.path);
-  const fullPath = path.join(process.env.ROOT_DIR || '/dev/null', webPath);
+  const fullPath = path.join(process.env.LAST_ROOT_DIR || '/dev/null', webPath);
   if (fs.existsSync(fullPath)) {
     const ls = fs.readdirSync(fullPath);
     const lsPlus = ls.map(name => {
