@@ -1,0 +1,14 @@
+[Unit]
+Description=Local Area Streamer (last)
+Documentation=https://github.com/makar2/last
+After=network.target
+
+[Service]
+Environment=LAST_PORT=2222 PATH=/bin:<absolute path to node bin directory>
+Type=simple
+User=<a non-root user>
+ExecStart=/usr/bin/bash <path to serve.sh>
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

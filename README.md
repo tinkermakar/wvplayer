@@ -27,4 +27,29 @@ Took from:
 
 1. Apply: `sudo netplan apply`
 
-3. Open the port
+1. Open the port
+
+## Autorun
+1. Make the sell script executable
+    ```bash
+    chmod +x daemon/server.sh
+    ```
+
+1. Draft a `last.service` file based on the example
+
+1. Do one of the two:
+    1. copy `last.service` to `/lib/systemd/system/last.service`
+    
+    1. Add it with a symbolink:
+        ```bash
+        sudo ln -s /absolute/path/to/last.service /lib/systemd/system
+        ```
+
+1. Reload the daemon and start the `last` service
+    ```bash
+    sudo systemctl enable last.service
+    sudo systemctl daemon-reload
+    sudo service last start
+    ```
+
+1. Now the app may be managed as a regular service (e.g. `sudo service last restart`)
