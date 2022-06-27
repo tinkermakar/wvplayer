@@ -4,7 +4,7 @@ import { join } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import { Err } from '@/types/global.types';
+import { Err } from '@/common/types';
 import indexRouter from './routes/index';
 
 const app = express();

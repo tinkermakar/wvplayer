@@ -1,5 +1,6 @@
+import fs from 'fs';
 import path from 'path';
-import { Record, BrokenPath } from '@/types/global.types';
+import { Record, BrokenPath, LsPlus } from '@/common/types';
 
 export const compare = (a: Record, b: Record): number => {
   if (a.name < b.name) {
@@ -12,15 +13,17 @@ export const compare = (a: Record, b: Record): number => {
 };
 
 export const breakPath = (pathStr: string): BrokenPath => {
-  const pathArr = decodeURI(pathStr).split('/');
-  if (pathArr[pathArr.length - 1] === 'player' && pathArr[pathArr.length - 2].endsWith('.mp4')) {
-    pathArr.pop();
-  }
+  const rawPathArr = decodeURI(pathStr).split('/');
+  const pathArr = rawPathArr[rawPathArr.length - 1] === 'player' && rawPathArr[rawPathArr.length - 2].endsWith('.mp4')
+    ? rawPathArr.slice(0, -1)
+    : rawPathArr;
 
+  const parentPathArr = pathArr.slice(0, -1);
   const name = pathArr[pathArr.length - 1];
-  const progressFilePath = path.join(process.env.LAST_ROOT_DIR || '/dev/null', ...pathArr, '..', 'progress.json');
+  const parentDir = path.join(process.env.LAST_ROOT_DIR || '/dev/null', ...pathArr, '..');
+  const progressFilePath = path.join(parentDir, 'progress.json');
 
-  return { name, pathArr, progressFilePath };
+  return { name, pathArr, progressFilePath, parentDir, parentPathArr };
 };
 
 export const breadcrumbMaker = (whereAmI: string): { name: string, url: string}[] => {
@@ -34,4 +37,16 @@ export const breadcrumbMaker = (whereAmI: string): { name: string, url: string}[
     breadcrumb.push({ name, url });
   }
   return breadcrumb;
+};
+
+export const dirContent = async (dirPath: string) : Promise<LsPlus[]> => {
+  const ls = fs.readdirSync(dirPath);
+  const lsPlus = ls.map(name => {
+    const isDir = !fs.statSync(path.join(dirPath, name)).isFile();
+    const isVideo = !isDir && name.endsWith('.mp4');
+
+    return { name, isDir, isVideo };
+  });
+
+  return lsPlus;
 };

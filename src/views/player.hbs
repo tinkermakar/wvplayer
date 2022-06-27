@@ -3,7 +3,16 @@
   {{!-- <track label="English subtitles" kind="subtitles" srclang="en" src="/static/the-web-is-always-changing.vtt" default=""> --}}
 </video>
 
+<h1><span id="dir">{{dir}} /</span> {{name}}</h1>
+<a id="bach-button" href="{{back}}"><button>Back</button></a>
+<br />
+<br />
+{{#if nextVideo}}
+  <a id="next-button" href="{{nextVideo}}"><button>Next</button></a>
+{{/if}}
+
 <script>
   const startTime2 = {{ startTime }}
+  const nextVideo2 = "{{ nextVideo }}"
 </script>
 <script src="/scripts/player.js"></script>

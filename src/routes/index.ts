@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { breakPath, compare, breadcrumbMaker } from '@/common/utils';
-import { Record } from '@/types/global.types';
+import { breakPath, breadcrumbMaker, compare, dirContent } from '@/common/utils';
+import { Record } from '@/common/types';
 
 const router = Router();
 
 router.get('*mp4/player', async (req, res) => {
-  const { name, pathArr, progressFilePath } = breakPath(req.path);
+  const { name, pathArr, progressFilePath, parentDir, parentPathArr } = breakPath(req.path);
 
   let startTime = 0;
   if (fs.existsSync(progressFilePath)) {
@@ -16,8 +16,19 @@ router.get('*mp4/player', async (req, res) => {
     if (record) startTime = record.time;
   }
 
+  const lsPlus = await dirContent(parentDir);
+  const videos = lsPlus.filter(el => el.isVideo);
+  const currentVideoIndex = videos.findIndex(el => el.name === name);
+  const nextVideoName = videos?.[currentVideoIndex + 1]?.name;
+
   const src = path.join('/', ...pathArr);
-  res.render('player', { src, startTime });
+  const back = path.join('/', ...parentPathArr);
+  const dir = parentPathArr[parentPathArr.length - 1];
+  const nextVideo = nextVideoName
+    ? path.join('/', ...parentPathArr, nextVideoName, 'player')
+    : null;
+
+  res.render('player', { name, dir, src, startTime, back, nextVideo });
 });
 
 // Took from: https://github.com/thesmartcoder7/video_streaming_server

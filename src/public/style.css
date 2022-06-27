@@ -14,3 +14,7 @@ video {
   outline: 0;
   width: 100%;
 }
+
+#dir {
+  color: grey;
+}

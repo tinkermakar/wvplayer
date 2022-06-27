@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 const startTime = startTime2;
+const nextVideo = nextVideo2;
 /* eslint-enable no-undef */
 
 // Pass a start time, if provided
@@ -29,7 +30,14 @@ setInterval(async () => {
   }
 }, 10 * 1000);
 
-// Keyboard shortcuts
+// Always focus the video
 const focuser = () => video.focus();
 document.addEventListener('keydown', focuser);
 document.addEventListener('click', focuser);
+
+// Play next video
+if (nextVideo) {
+  video.addEventListener('ended', () => {
+    window.location.href = nextVideo;
+  });
+}
