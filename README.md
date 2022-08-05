@@ -2,6 +2,27 @@
 
 ## Setup static IP
 
+### Method 1. VIA Gnome Settings
+
+Took from: https://linuxhint.com/configure-static-ip-address-linux/
+
+1. Go to network's preferences --> IPv4
+
+1. Set method to `Manual
+
+1. Fill in:
+    - Address: Desired static IP in the network
+    - Netmask: `255.255.255.0`
+    - Gateway: usually ends with 1
+    - DNS: `8.8.8.8`
+
+1. Press `Apply`
+
+1. Let the network default to `0.0.0.0`
+
+
+### Method 2. Via Netplan
+
 Took from:
 - https://linuxize.com/post/how-to-configure-static-ip-address-on-ubuntu-20-04/
 - https://tizutech.com/ubuntu-netplan-gateway4-has-been-deprecated
@@ -11,7 +32,7 @@ Took from:
       version: 2
       renderer: networkd
       ethernets:
-        wlp3s0:
+        {{interface}}:
           dhcp4: no
           addresses:
             - {{DESIRED ADDRESS}}/24
