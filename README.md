@@ -53,7 +53,7 @@ Took from:
 ## Autorun
 1. Make the sell script executable
     ```bash
-    chmod +x daemon/server.sh
+    chmod +x daemon/serve.sh
     ```
 
 1. Draft a `last.service` file based on the example
