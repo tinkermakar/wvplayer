@@ -18,3 +18,8 @@ video {
 #dir {
   color: grey;
 }
+
+/* TODO temporary */
+p, li {
+  margin-bottom: 12px;
+}
