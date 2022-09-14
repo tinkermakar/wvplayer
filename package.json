@@ -1,12 +1,15 @@
 {
   "name": "sample-ts-express",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
+  "main": "dist/bin/www.js",
   "scripts": {
-    "build": "tsc --build --watch",
-    "serve": "ts-node -r tsconfig-paths/register ./dist/bin/www.js",
-    "start": "nodemon --watch src/ -e ts --exec 'tsc && npm run serve'",
-    "lint": "eslint './src/**/*.ts'"
+    "build": "tsc",
+    "build-and-start": "npm run build && node -r ts-node/register -r tsconfig-paths/register .",
+    "start": "nodemon --watch src/ -e 'ts json' --exec 'npm run build-and-start'",
+    "start:prod": "NODE_ENV=production npm run build-and-start",
+    "eslint": "eslint './src/**/*.ts'",
+    "lint": "npm run build; npm run eslint"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

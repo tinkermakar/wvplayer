@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd "$(dirname "$0")/.."
-npm run serve
+npm run start:prod
