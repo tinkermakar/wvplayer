@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Record, BrokenPath, LsPlus } from '@/common/types';
+import { Record, BrokenPath, LsPlus } from './types';
 
 export const compare = (a: Record, b: Record): number => {
   if (a.name < b.name) {

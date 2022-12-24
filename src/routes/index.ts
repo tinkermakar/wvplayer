@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { breakPath, breadcrumbMaker, compare, dirContent } from '@/common/utils';
-import { Record } from '@/common/types';
+import { breakPath, breadcrumbMaker, compare, dirContent } from '../common/utils';
+import { Record } from '../common/types';
 
 const router = Router();
 
@@ -66,16 +66,16 @@ router.get('*mp4', async (req, res) => {
 });
 
 router.post('/progress-tracker', async (req, res) => {
-  const { time, pathStr } = req.body;
+  const { time, total, pathStr } = req.body;
 
-  if (time && pathStr) {
+  if (time && total && pathStr) {
     const { name, progressFilePath } = breakPath(pathStr);
 
     const initial: Record[] = fs.existsSync(progressFilePath)
       ? JSON.parse(fs.readFileSync(progressFilePath).toString())
       : [];
 
-    const newRecord = { name, time };
+    const newRecord = { name, total, time };
     const existing: Record | undefined = initial.find((el: Record) => el.name === name);
 
     let newFile = [];
@@ -100,6 +100,10 @@ router.get('*', async (req, res) => {
     : decodeURI(req.path);
   const fullPath = path.join(process.env.LAST_ROOT_DIR || '/dev/null', webPath);
   if (fs.existsSync(fullPath)) {
+    const progressFilePath = path.join(fullPath, 'progress.json');
+    const progressFile = fs.existsSync(progressFilePath)
+      ? JSON.parse(fs.readFileSync(progressFilePath)?.toString())
+      : null;
     const ls = fs.readdirSync(fullPath);
     const lsPlus = ls.map(name => {
       const isDir = !fs.statSync(path.join(fullPath, name)).isFile();
@@ -112,7 +116,19 @@ router.get('*', async (req, res) => {
           ? `${webPath}/${name}/player`
           : null;
 
-      return { name, isDir, isVideo, url };
+      let progress = 0;
+
+      if (isVideo) {
+        const record = progressFile?.find((el: Record) => el.name === name);
+        if (record) {
+          const { time, total } = record;
+          if (time && total) {
+            progress = Math.ceil((time / total) * 100);
+          }
+        }
+      }
+
+      return { name, isDir, isVideo, url, progress };
     });
 
     const directories = lsPlus.filter(el => el.isDir);
@@ -120,7 +136,7 @@ router.get('*', async (req, res) => {
     const other = lsPlus.filter(el => !el.isDir && !el.isVideo);
 
     const breadcrumb = breadcrumbMaker(webPath);
-    const output: any = { breadcrumb, directories, videos, other };
+    const output = { breadcrumb, directories, videos, other };
     // console.info(output);
     return res.render('index', output);
   }

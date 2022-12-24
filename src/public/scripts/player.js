@@ -18,12 +18,14 @@ let timeOnFile = startTime;
 setInterval(async () => {
   const newTime = Math.floor(video.currentTime);
   if (newTime > timeOnFile) {
+    const total = Math.floor(video.duration);
     timeOnFile = newTime;
     await fetch('/progress-tracker', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         time: newTime,
+        total,
         pathStr: location.pathname,
       }),
     });

@@ -14,7 +14,6 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
-    'import',
   ],
   rules: {
     'no-restricted-globals': 0,
@@ -25,8 +24,6 @@ module.exports = {
     'brace-style': [1, 'stroustrup'],
     'class-methods-use-this': 0,
     'func-names': [1, 'always', { generators: 'never' }],
-    'import/extensions': 0,
-    'import/prefer-default-export': 0,
     'no-console': [1, { allow: ['error', 'info', 'warning'] }],
     'linebreak-style': 0,
     'object-curly-newline': [
@@ -37,10 +34,5 @@ module.exports = {
       },
     ],
     'no-plusplus': [1, { allowForLoopAfterthoughts: true }],
-  },
-  settings: {
-    'import/resolver': {
-      typescript: {},
-    },
   },
 };

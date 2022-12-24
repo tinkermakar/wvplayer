@@ -7,7 +7,7 @@
 import dotenv from 'dotenv-flow';
 import debugPkg from 'debug';
 import { createServer } from 'http';
-import app from '@/app';
+import app from '../app';
 import { Addr, Err } from './www.types';
 
 dotenv.config();
