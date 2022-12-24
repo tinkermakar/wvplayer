@@ -116,7 +116,7 @@ router.get('*', async (req, res) => {
           ? `${webPath}/${name}/player`
           : null;
 
-      let progress = 0;
+      let progress = null;
 
       if (isVideo) {
         const record = progressFile?.find((el: Record) => el.name === name);
@@ -124,6 +124,11 @@ router.get('*', async (req, res) => {
           const { time, total } = record;
           if (time && total) {
             progress = Math.ceil((time / total) * 100);
+          }
+          else if (time) {
+            // backwards compatibility
+            // show 0% if there is some progress but total is unknown
+            progress = 0;
           }
         }
       }

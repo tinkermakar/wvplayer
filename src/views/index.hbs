@@ -19,7 +19,12 @@
 
 <ul>
   {{#each videos}}
-    <li><a href="{{this.url}}">{{this.name}}</a> [{{this.progress}}%]</li>
+    <li>
+      <a href="{{this.url}}">{{this.name}}</a>
+      {{#if this.progress includeZero=true}}
+        [{{this.progress}}%]
+      {{/if}}
+    </li>
   {{/each}}
 </ul>
 
