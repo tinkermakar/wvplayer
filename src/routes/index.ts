@@ -22,13 +22,14 @@ router.get('*mp4/player', async (req, res) => {
   const nextVideoName = videos?.[currentVideoIndex + 1]?.name;
 
   const src = path.join('/', ...pathArr);
+  const subtitleSrc = src.replace('.mp4', '.vtt');
   const back = path.join('/', ...parentPathArr);
   const dir = parentPathArr[parentPathArr.length - 1];
   const nextVideo = nextVideoName
     ? path.join('/', ...parentPathArr, nextVideoName, 'player')
     : null;
 
-  res.render('player', { name, dir, src, startTime, back, nextVideo });
+  res.render('player', { name, dir, src, subtitleSrc, startTime, back, nextVideo });
 });
 
 // Took from: https://github.com/thesmartcoder7/video_streaming_server
@@ -63,6 +64,12 @@ router.get('*mp4', async (req, res) => {
     res.writeHead(200, head2);
     fs.createReadStream(src).pipe(res);
   }
+});
+
+router.get('*vtt', async (req, res) => {
+  const { pathArr } = breakPath(req.path);
+  const src = path.join(process.env.LAST_ROOT_DIR || '/dev/null', ...pathArr).replace('.mp4', '.vtt');
+  res.sendFile(src);
 });
 
 router.post('/progress-tracker', async (req, res) => {
