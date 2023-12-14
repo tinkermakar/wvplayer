@@ -13,6 +13,11 @@ catch (err) {
   console.error('>>> autoplay failed');
 }
 
+video.addEventListener('keydown', ({ code }) => {
+  if (code === 'ArrowLeft' && video.currentTime > 0) video.currentTime += 115;
+  else if (code === 'ArrowRight' && video.currentTime < video.duration) video.currentTime -= 115;
+});
+
 let timeOnFile = startTime;
 
 setInterval(async () => {

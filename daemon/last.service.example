@@ -1,6 +1,6 @@
 [Unit]
 Description=Local Area Streamer (last)
-Documentation=https://github.com/makar2/last
+Documentation=https://github.com/tinkermakar/last
 After=network.target
 
 [Service]
