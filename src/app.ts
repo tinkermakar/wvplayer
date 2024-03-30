@@ -1,33 +1,36 @@
-import createError from 'http-errors';
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { join } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-
+import hbs from 'hbs';
 import { Err } from './common/types';
-import indexRouter from './routes/index';
+import { indexRouter } from './routes/index';
+import { loginRouter } from './routes/login';
+import { config } from './lib/config/config';
+import { authMiddleware } from './middleware/authMiddleware';
 
 const app = express();
 
 // view engine setup
 app.set('views', join(__dirname, '..', 'src', 'views'));
 app.set('view engine', 'hbs');
+hbs.registerPartials(join(__dirname, '..', 'src', 'views', 'partials'), console.error);
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.set('json spaces', 2);
 
-app.use(express.static(join(__dirname, '..', 'src', 'public')));
+app.use(express.static(join(__dirname, '..', 'src', 'public'))); // TODO move all to dist by converting to TS
+app.use(express.static(join(__dirname, '..', 'dist', 'public')));
 
-app.get('/favicon.ico', (req, res) => res.status(204));
+app.get('/favicon.ico', ({}, res) => res.status(204));
+app.use('/login', loginRouter);
+app.use(authMiddleware);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
-app.use((req, res, next: NextFunction) => {
-  next(createError(404));
-});
+app.use(({}, {}, next) => next({ status: 404 }));
 
 // error handler
 app.use((err: Err, req: Request, res: Response) => {
@@ -40,4 +43,4 @@ app.use((err: Err, req: Request, res: Response) => {
   res.render('error');
 });
 
-export default app;
+app.listen(config.port, async () => console.info(`🚀 Listening on port ${config.port}\n`));

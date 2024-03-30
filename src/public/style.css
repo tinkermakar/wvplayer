@@ -1,12 +1,16 @@
 body {
   background-color: rgb(20, 20, 20);
   color: white;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font:
+    14px 'Lucida Grande',
+    Helvetica,
+    Arial,
+    sans-serif;
   margin: 0;
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
 }
 
 video {
@@ -20,6 +24,7 @@ video {
 }
 
 /* TODO temporary */
-p, li {
+p,
+li {
   margin-bottom: 12px;
 }

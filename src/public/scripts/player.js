@@ -8,8 +8,7 @@ const video = document.getElementById('video-main');
 video.currentTime = startTime;
 try {
   video.play();
-}
-catch (err) {
+} catch (err) {
   console.error('>>> autoplay failed');
 }
 

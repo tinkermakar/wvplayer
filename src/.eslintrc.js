@@ -1,38 +1,39 @@
 module.exports = {
   env: {
     browser: true,
-    commonjs: true,
     es2021: true,
   },
-  extends: [
-    'airbnb-base',
-    'plugin:@typescript-eslint/recommended',
-  ],
+  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  overrides: [],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 12,
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-  plugins: [
-    '@typescript-eslint',
-  ],
+  plugins: ['@typescript-eslint'],
   rules: {
-    'no-restricted-globals': 0,
-
-    // v.1.4 (2021-09-20)
-    '@typescript-eslint/no-explicit-any': 0,
-    'arrow-parens': [1, 'as-needed'],
-    'brace-style': [1, 'stroustrup'],
-    'class-methods-use-this': 0,
-    'func-names': [1, 'always', { generators: 'never' }],
     'no-console': [1, { allow: ['error', 'info', 'warning'] }],
-    'linebreak-style': 0,
-    'object-curly-newline': [
-      0,
+    'no-shadow': 0,
+    'consistent-return': 0,
+    '@typescript-eslint/no-shadow': 'warn',
+    'import/prefer-default-export': 0,
+    'import/extensions': 0,
+    'no-await-in-loop': 0,
+    'no-restricted-syntax': 0,
+    'no-plusplus': 0,
+    'no-empty-pattern': ['error', { allowObjectPatternsAsParameters: true }],
+    'lines-between-class-members': [
+      'error',
       {
-        ObjectExpression: 'always',
-        ObjectPattern: { minProperties: 2 },
+        enforce: [{ blankLine: 'always', prev: 'method', next: 'method' }],
       },
     ],
-    'no-plusplus': [1, { allowForLoopAfterthoughts: true }],
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
   },
 };

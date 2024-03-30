@@ -3,10 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import { breakPath, breadcrumbMaker, compare, dirContent } from '../common/utils';
 import { Record } from '../common/types';
+import { config } from '../lib/config/config';
 
-const router = Router();
+export const indexRouter = Router();
 
-router.get('*mp4/player', async (req, res) => {
+indexRouter.get('*mp4/player', async (req, res) => {
   const { name, pathArr, progressFilePath, parentDir, parentPathArr } = breakPath(req.path);
 
   let startTime = 0;
@@ -33,10 +34,13 @@ router.get('*mp4/player', async (req, res) => {
 });
 
 // Took from: https://github.com/thesmartcoder7/video_streaming_server
-router.get('*mp4', async (req, res) => {
+indexRouter.get('*mp4', async (req, res, next) => {
   const { pathArr } = breakPath(req.path);
-  const src = path.join(process.env.LAST_ROOT_DIR || '/dev/null', ...pathArr);
-  const videoSize = fs.statSync(src).size;
+  const src = path.join(config.rootDir || '/dev/null', ...pathArr);
+
+  if (!fs.existsSync(src)) return next({ code: 404 });
+  const videoSize = fs.statSync(src)?.size;
+  if (!videoSize) return next({ code: 500 });
 
   const { range } = req.headers;
   if (range) {
@@ -54,8 +58,7 @@ router.get('*mp4', async (req, res) => {
 
     res.writeHead(206, head1);
     fs.createReadStream(src, { start, end }).pipe(res);
-  }
-  else {
+  } else {
     const head2 = {
       'Content-Type': 'video/mp4',
       'Accept-Ranges': 'bytes',
@@ -66,13 +69,13 @@ router.get('*mp4', async (req, res) => {
   }
 });
 
-router.get('*vtt', async (req, res) => {
+indexRouter.get('*vtt', async (req, res) => {
   const { pathArr } = breakPath(req.path);
-  const src = path.join(process.env.LAST_ROOT_DIR || '/dev/null', ...pathArr).replace('.mp4', '.vtt');
+  const src = path.join(config.rootDir || '/dev/null', ...pathArr).replace('.mp4', '.vtt');
   res.sendFile(src);
 });
 
-router.post('/progress-tracker', async (req, res) => {
+indexRouter.post('/progress-tracker', async (req, res) => {
   const { time, total, pathStr } = req.body;
 
   if (time && total && pathStr) {
@@ -89,8 +92,7 @@ router.post('/progress-tracker', async (req, res) => {
     if (existing) {
       const filtered = initial.filter((el: Record) => el.name !== name);
       newFile = [...filtered, newRecord];
-    }
-    else newFile = [...initial, newRecord];
+    } else newFile = [...initial, newRecord];
 
     const newFileSorted = newFile.sort(compare);
     const newFileFinal = JSON.stringify(newFileSorted, null, 2);
@@ -101,11 +103,9 @@ router.post('/progress-tracker', async (req, res) => {
   res.json(['time-tracker']);
 });
 
-router.get('*', async (req, res) => {
-  const webPath = req.path === '/'
-    ? ''
-    : decodeURI(req.path);
-  const fullPath = path.join(process.env.LAST_ROOT_DIR || '/dev/null', webPath);
+indexRouter.get('*', async (req, res) => {
+  const webPath = req.path === '/' ? '' : decodeURI(req.path);
+  const fullPath = path.join(config.rootDir || '/dev/null', webPath);
   if (fs.existsSync(fullPath)) {
     const progressFilePath = path.join(fullPath, 'progress.json');
     const progressFile = fs.existsSync(progressFilePath)
@@ -117,11 +117,7 @@ router.get('*', async (req, res) => {
       const isVideo = !isDir && name.endsWith('.mp4');
 
       // eslint-disable-next-line no-nested-ternary
-      const url = isDir
-        ? `${webPath}/${name}`
-        : isVideo
-          ? `${webPath}/${name}/player`
-          : null;
+      const url = isDir ? `${webPath}/${name}` : isVideo ? `${webPath}/${name}/player` : null;
 
       let progress = null;
 
@@ -131,8 +127,7 @@ router.get('*', async (req, res) => {
           const { time, total } = record;
           if (time && total) {
             progress = Math.ceil((time / total) * 100);
-          }
-          else if (time) {
+          } else if (time) {
             // backwards compatibility
             // show 0% if there is some progress but total is unknown
             progress = 0;
@@ -154,5 +149,3 @@ router.get('*', async (req, res) => {
   }
   return res.send('Wrong Way!');
 });
-
-export default router;

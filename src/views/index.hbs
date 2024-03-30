@@ -3,7 +3,7 @@
 <h2>Breadcrumb</h2>
 <ul>
   {{#each breadcrumb}}
-    <li><a href="{{this.url}}">{{this.name}}</a></li>
+    <li><a href='{{this.url}}'>{{this.name}}</a></li>
   {{/each}}
 </ul>
 
@@ -11,7 +11,7 @@
 
 <ul>
   {{#each directories}}
-    <li><a href="{{this.url}}">{{this.name}}</a></li>
+    <li><a href='{{this.url}}'>{{this.name}}</a></li>
   {{/each}}
 </ul>
 
@@ -20,7 +20,7 @@
 <ul>
   {{#each videos}}
     <li>
-      <a href="{{this.url}}">{{this.name}}</a>
+      <a href='{{this.url}}'>{{this.name}}</a>
       {{#if this.progress includeZero=true}}
         [{{this.progress}}%]
       {{/if}}
@@ -31,11 +31,8 @@
 <h2>Other</h2>
 <ul>
   {{#each other}}
-    <li><a href="{{this.url}}">{{this.name}}</a></li>
+    <li><a href='{{this.url}}'>{{this.name}}</a></li>
   {{/each}}
 </ul>
 
-
-<script>
-  console.log(location);
-</script>
+{{> logout}}

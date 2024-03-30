@@ -1,0 +1,2 @@
+# Prettier says partials in handlebars are not supported
+*.hbs
