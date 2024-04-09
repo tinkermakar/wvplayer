@@ -1,0 +1,11 @@
+services:
+  wvplayer:
+    image: ${IMAGE_NAME:-wvplayer}
+    build: .
+    environment:
+      NODE_ENV: prod
+      IS_DOCKER: true
+    volumes:
+      - $WVPLAYER_ROOT_DIR:/usr/src/wvplayer-data
+    ports:
+      - '127.0.0.1:$WVPLAYER_PORT:3000'

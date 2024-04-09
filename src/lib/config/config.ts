@@ -1,14 +1,18 @@
 import { Problem } from './errorHandling';
 
-const { LAST_PORT, LAST_ROOT_DIR, LAST_USERNAME, LAST_PASSWORD } = process.env;
+const { IS_DOCKER, WVPLAYER_PORT, WVPLAYER_ROOT_DIR, WVPLAYER_USERNAME, WVPLAYER_PASSWORD } =
+  process.env;
 
-if (!LAST_PORT || !LAST_ROOT_DIR || !LAST_USERNAME || !LAST_PASSWORD) {
+if (!WVPLAYER_PORT || !WVPLAYER_ROOT_DIR || !WVPLAYER_USERNAME || !WVPLAYER_PASSWORD) {
   throw new Problem('misconfigured', 500);
 }
 
+const rootDir = IS_DOCKER ? '/usr/src/wvplayer-data' : WVPLAYER_ROOT_DIR;
+const port = IS_DOCKER ? 3000 : WVPLAYER_PORT;
+
 export const config = {
-  port: LAST_PORT,
-  rootDir: LAST_ROOT_DIR,
-  username: LAST_USERNAME,
-  password: LAST_PASSWORD,
+  rootDir,
+  port,
+  username: WVPLAYER_USERNAME,
+  password: WVPLAYER_PASSWORD,
 } as const;

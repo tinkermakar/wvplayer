@@ -131,4 +131,4 @@ dist
 
 # CUSTOM ADDED
 videos
-daemon/last.service
+daemon/wvplayer.service

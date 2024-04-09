@@ -1,4 +1,4 @@
-# LAST (Local Area Streamer)
+# WVPlayer (Web Video Player)
 
 ## Setup static IP
 
@@ -54,28 +54,44 @@ Took from:
 
 ## Autorun
 
+### Method 1. As a service
+
 1. Make the sell script executable
 
    ```bash
    chmod +x daemon/serve.sh
    ```
 
-1. Draft a `last.service` file based on the example
+1. Draft a `wvplayer.service` file based on the example
 
 1. Do one of the two:
 
-   1. copy `last.service` to `/lib/systemd/system/last.service`
+   1. copy `wvplayer.service` to `/lib/systemd/system/wvplayer.service`
    1. Add it with a symbolink:
       ```bash
-      sudo ln -s /absolute/path/to/last.service /lib/systemd/system
+      sudo ln -s /absolute/path/to/wvplayer.service /lib/systemd/system
       ```
 
-1. Reload the daemon and start the `last` service
+1. Reload the daemon and start the `wvplayer` service
 
    ```bash
-   sudo systemctl enable last.service
+   sudo systemctl enable wvplayer.service
    sudo systemctl daemon-reload
-   sudo service last start
+   sudo service wvplayer start
    ```
 
-1. Now the app may be managed as a regular service (e.g. `sudo service last restart`)
+1. Now the app may be managed as a regular service (e.g. `sudo service wvplayer restart`)
+
+To take the service down permanently:
+
+```bash
+systemctl stop wvplayer
+systemctl disable wvplayer
+rm /lib/systemd/system/wvplayer
+systemctl daemon-reload
+systemctl reset-failed
+```
+
+### Method 2. As a docker image
+
+just `docker compose up`

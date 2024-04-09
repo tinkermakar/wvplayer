@@ -1,16 +1,17 @@
 {
-  "name": "local-area-streamer",
+  "name": "web-video-player",
   "version": "2.0.0-alpha",
   "main": "dist/app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tinkermakar/last.git"
+    "url": "git+https://github.com/tinkermakar/wvplayer.git"
   },
   "scripts": {
     "dev-tsx": "tsx watch --clear-screen=false --env-file=.env src/app",
     "dev-tsc": "tsc --watch",
     "start": "concurrently --kill-others npm:dev-*",
-    "start:prod": "NODE_ENV=production tsc && node --env-file=.env .",
+    "start:prod": "NODE_ENV=prod tsc && node --env-file=.env .",
+    "start:prod:docker": "NODE_ENV=prod node --env-file=.env .",
     "tsc-lint": "tsc --noEmit --noUnusedLocals --noUnusedParameters",
     "eslint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --ignore-path .hbs-ignore --write .",

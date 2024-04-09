@@ -1,0 +1,49 @@
+name: Deploy
+on:
+  workflow_call:
+    inputs:
+      IMAGE_NAME: { required: true, type: string }
+    secrets:
+      SSH_CONFIG: { required: true }
+      SSH_KNOWN_HOSTS: { required: true }
+      SSH_KEY: { required: true }
+      DOTENV: { required: true }
+      COMPOSE_DIR: { required: true }
+
+jobs:
+  deploy:
+    permissions: write-all # TODO restrict to minimal required permissions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/server
+          sudo chmod -R 700 ~/.ssh
+          echo "${{ secrets.SSH_CONFIG }}" > ~/.ssh/config
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/server/id_rsa
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/server/known_hosts
+          sudo chmod -R 600 ~/.ssh/server/id_rsa
+
+      - name: Copy Docker Compose and DOTENV files
+        run: |
+          ssh server mkdir -p "${{ secrets.COMPOSE_DIR }}"
+          echo "${{ secrets.DOTENV }}" >> .env
+          echo IMAGE_NAME="${{ inputs.IMAGE_NAME }}" >> .env
+          scp ./.env server:${{ secrets.COMPOSE_DIR }}
+          scp ./docker-compose.yml server:${{ secrets.COMPOSE_DIR }}
+
+      - name: Login and Pull current Docker image
+        run: >
+          ssh server "echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_REPOSITORY_OWNER --password-stdin &&
+          docker pull "${{ inputs.IMAGE_NAME }}""
+
+      - name: Compose down, then up with current Docker image
+        run: >
+          ssh server "cd "${{ secrets.COMPOSE_DIR }}" &&
+          docker compose down --remove-orphans >/dev/null 2>&1 &&
+          sleep 11 &&
+          docker compose up -d"
+
+      - name: Delete all non-current Docker images
+        run: ssh server 'docker rmi `docker images | grep 'ghcr.io/${{ github.repository }}' | awk '"'"'{print $3}'"'"' ` --force || echo errors_ignored'

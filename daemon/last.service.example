@@ -1,10 +1,10 @@
 [Unit]
-Description=Local Area Streamer (last)
-Documentation=https://github.com/tinkermakar/last
+Description=Local Area Streamer (wvplayer)
+Documentation=https://github.com/tinkermakar/wvplayer
 After=network.target
 
 [Service]
-Environment=LAST_PORT=2222 PATH=/bin:<absolute path to node bin directory>
+Environment=WVPLAYER_PORT=2222 PATH=/bin:<absolute path to node bin directory>
 Type=simple
 User=<a non-root user>
 ExecStart=/usr/bin/bash <path to serve.sh>

@@ -1,0 +1,28 @@
+name: CI private
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    permissions: write-all # TODO restrict to minimal required permissions
+    uses: tinkermakar/wvplayer/.github/workflows/_build.yml@main
+    with:
+      IMAGE_NAME: ghcr.io/${{ github.repository }}-${{ github.ref_name }}:${{ github.sha }}
+    secrets:
+      DOTENV: ${{ secrets.DOTENV_PERSONAL }}
+
+  deploy:
+    needs: build
+    uses: tinkermakar/wvplayer/.github/workflows/_deploy.yml@main
+    with:
+      IMAGE_NAME: ghcr.io/${{ github.repository }}-${{ github.ref_name }}:${{ github.sha }}
+    secrets:
+      SSH_CONFIG: ${{ secrets.SSH_CONFIG }} # server specific
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }} # server specific
+      SSH_KEY: ${{ secrets.SSH_KEY }} # server specific
+      DOTENV: ${{ secrets.DOTENV_PERSONAL }} # varies per environment
+      COMPOSE_DIR: ${{ secrets.COMPOSE_DIR_PERSONAL }} # varies per environment
