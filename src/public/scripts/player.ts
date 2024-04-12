@@ -13,11 +13,6 @@ if (video) {
     console.error('>>> autoplay failed');
   }
 
-  video.addEventListener('keydown', ({ code }: KeyboardEvent) => {
-    if (code === 'ArrowLeft' && video.currentTime > 0) video.currentTime += 115;
-    else if (code === 'ArrowRight' && video.currentTime < video.duration) video.currentTime -= 115;
-  });
-
   let timeOnFile: number = startTime;
 
   setInterval(async () => {
@@ -50,3 +45,13 @@ if (video) {
     });
   }
 }
+
+document.querySelectorAll('.player-seek')?.forEach(el =>
+  el.addEventListener('click', e => {
+    const targetButton = e?.target as HTMLElement;
+    if (targetButton && video) {
+      if (targetButton.classList.contains('seek-plus')) video.currentTime += 10;
+      else video.currentTime -= 10;
+    }
+  }),
+);
