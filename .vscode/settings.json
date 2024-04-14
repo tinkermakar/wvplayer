@@ -1,5 +1,5 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": ["Autorun", "wvplayer", "wwplayer"]
+  "cSpell.words": ["Autorun", "ethernets", "netplan", "networkd", "wvplayer", "wwplayer"]
 }
