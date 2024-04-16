@@ -33,7 +33,7 @@ frontRouter.get('*mp4/player', async (req, res) => {
   res.render('player', { name, dir, src, subtitleSrc, startTime, back, nextVideo });
 });
 
-frontRouter.get('*', async (req, res) => {
+frontRouter.get('*', async (req, res, next) => {
   const webPath = req.path === '/' ? '' : decodeURI(req.path);
   const fullPath = path.join(config.rootDir || '/dev/null', webPath);
   if (fs.existsSync(fullPath)) {
@@ -77,5 +77,7 @@ frontRouter.get('*', async (req, res) => {
     // console.info(output);
     return res.render('index', output);
   }
-  return res.sendStatus(404);
+
+  // catch 404 and forward to error handler
+  next({ status: 404 });
 });

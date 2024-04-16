@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static(join(__dirname, '..', 'src', 'public'))); // TODO move all to dist by converting to TS
+app.use(express.static(join(__dirname, '..', 'src', 'public')));
 app.use(express.static(join(__dirname, '..', 'dist', 'public')));
 
 app.get('/favicon.ico', (_req, res) => res.status(204));
@@ -30,9 +30,6 @@ app.use('/login', loginRouter);
 app.use(authMiddleware);
 app.use('/api', apiRouter);
 app.use('/', frontRouter);
-
-// catch 404 and forward to error handler
-app.use((_req, _res, next) => next({ status: 404 }));
 
 // error handler
 app.use((err: Err, req: Request, res: Response) => {
