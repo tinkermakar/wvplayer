@@ -15,7 +15,8 @@
     "tsc-lint": "tsc --noEmit --noUnusedLocals --noUnusedParameters",
     "eslint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --ignore-path .hbs-ignore --write .",
-    "lint": "npm run tsc-lint && npm run eslint"
+    "lint": "npm run tsc-lint && npm run eslint",
+    "test": "T_LIST=`find src -name *$FILE*.test.ts` && [ -k $T_LIST ] && exit 1 || tsx --env-file=.env --test $T_LIST"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",

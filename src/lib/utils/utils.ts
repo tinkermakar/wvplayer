@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { Record, BrokenPath, LsPlus } from './types';
-import { config } from '../lib/config/config';
+import { Record, BrokenPath, LsPlus } from '../types/types';
+import { config } from '../config/config';
 
 export const compare = (a: Record, b: Record): number => {
   if (a.name < b.name) {

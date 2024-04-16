@@ -20,7 +20,7 @@ if (video) {
     if (newTime > timeOnFile) {
       const total: number = Math.floor(video.duration);
       timeOnFile = newTime;
-      await fetch('/progress-tracker', {
+      await fetch('/api/progress-tracker', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

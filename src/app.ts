@@ -3,8 +3,9 @@ import { join } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import hbs from 'hbs';
-import { Err } from './common/types';
-import { indexRouter } from './routes/index';
+import { Err } from './lib/types/types';
+import { frontRouter } from './routes/front';
+import { apiRouter } from './routes/api';
 import { loginRouter } from './routes/login';
 import { config } from './lib/config/config';
 import { authMiddleware } from './middleware/authMiddleware';
@@ -24,13 +25,14 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, '..', 'src', 'public'))); // TODO move all to dist by converting to TS
 app.use(express.static(join(__dirname, '..', 'dist', 'public')));
 
-app.get('/favicon.ico', ({}, res) => res.status(204));
+app.get('/favicon.ico', (_req, res) => res.status(204));
 app.use('/login', loginRouter);
 app.use(authMiddleware);
-app.use('/', indexRouter);
+app.use('/api', apiRouter);
+app.use('/', frontRouter);
 
 // catch 404 and forward to error handler
-app.use(({}, {}, next) => next({ status: 404 }));
+app.use((_req, _res, next) => next({ status: 404 }));
 
 // error handler
 app.use((err: Err, req: Request, res: Response) => {

@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { breakPath, breadcrumbMaker, compare, dirContent } from '../common/utils';
-import { Record } from '../common/types';
+import { breakPath, breadcrumbMaker, dirContent } from '../lib/utils/utils';
+import { Record } from '../lib/types/types';
 import { config } from '../lib/config/config';
 
-export const indexRouter = Router();
+export const frontRouter = Router();
 
-indexRouter.get('*mp4/player', async (req, res) => {
+frontRouter.get('*mp4/player', async (req, res) => {
   const { name, pathArr, progressFilePath, parentDir, parentPathArr } = breakPath(req.path);
 
   let startTime = 0;
@@ -22,7 +22,7 @@ indexRouter.get('*mp4/player', async (req, res) => {
   const currentVideoIndex = videos.findIndex(el => el.name === name);
   const nextVideoName = videos?.[currentVideoIndex + 1]?.name;
 
-  const src = path.join('/', ...pathArr);
+  const src = path.join('/api/', ...pathArr);
   const subtitleSrc = src.replace('.mp4', '.vtt');
   const back = path.join('/', ...parentPathArr);
   const dir = parentPathArr[parentPathArr.length - 1];
@@ -33,77 +33,7 @@ indexRouter.get('*mp4/player', async (req, res) => {
   res.render('player', { name, dir, src, subtitleSrc, startTime, back, nextVideo });
 });
 
-// Took from: https://github.com/thesmartcoder7/video_streaming_server
-indexRouter.get('*mp4', async (req, res, next) => {
-  const { pathArr } = breakPath(req.path);
-  const src = path.join(config.rootDir || '/dev/null', ...pathArr);
-
-  if (!fs.existsSync(src)) return next({ code: 404 });
-  const videoSize = fs.statSync(src)?.size;
-  if (!videoSize) return next({ code: 500 });
-
-  const { range } = req.headers;
-  if (range) {
-    const CHUNK_SIZE = 10 ** 6; // 1MB
-    const start = Number(range?.replace(/\D/g, ''));
-    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
-    const contentLength = end - start + 1;
-
-    const head1 = {
-      'Content-Type': 'video/mp4',
-      'Accept-Ranges': 'bytes',
-      'Content-Range': `bytes ${start}-${end}/${videoSize}`,
-      'Content-Length': contentLength,
-    };
-
-    res.writeHead(206, head1);
-    fs.createReadStream(src, { start, end }).pipe(res);
-  } else {
-    const head2 = {
-      'Content-Type': 'video/mp4',
-      'Accept-Ranges': 'bytes',
-      'Content-Length': videoSize,
-    };
-    res.writeHead(200, head2);
-    fs.createReadStream(src).pipe(res);
-  }
-});
-
-indexRouter.get('*vtt', async (req, res) => {
-  const { pathArr } = breakPath(req.path);
-  const src = path.join(config.rootDir || '/dev/null', ...pathArr).replace('.mp4', '.vtt');
-  res.sendFile(src);
-});
-
-indexRouter.post('/progress-tracker', async (req, res) => {
-  const { time, total, pathStr } = req.body;
-
-  if (time && total && pathStr) {
-    const { name, progressFilePath } = breakPath(pathStr);
-
-    const initial: Record[] = fs.existsSync(progressFilePath)
-      ? JSON.parse(fs.readFileSync(progressFilePath).toString())
-      : [];
-
-    const newRecord = { name, total, time };
-    const existing: Record | undefined = initial.find((el: Record) => el.name === name);
-
-    let newFile = [];
-    if (existing) {
-      const filtered = initial.filter((el: Record) => el.name !== name);
-      newFile = [...filtered, newRecord];
-    } else newFile = [...initial, newRecord];
-
-    const newFileSorted = newFile.sort(compare);
-    const newFileFinal = JSON.stringify(newFileSorted, null, 2);
-
-    fs.writeFileSync(progressFilePath, newFileFinal);
-  }
-
-  res.json(['time-tracker']);
-});
-
-indexRouter.get('*', async (req, res) => {
+frontRouter.get('*', async (req, res) => {
   const webPath = req.path === '/' ? '' : decodeURI(req.path);
   const fullPath = path.join(config.rootDir || '/dev/null', webPath);
   if (fs.existsSync(fullPath)) {
@@ -147,5 +77,5 @@ indexRouter.get('*', async (req, res) => {
     // console.info(output);
     return res.render('index', output);
   }
-  return res.send('Wrong Way!');
+  return res.sendStatus(404);
 });
