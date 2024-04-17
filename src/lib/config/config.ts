@@ -1,4 +1,4 @@
-import { Problem } from './errorHandling';
+import { Problem } from '../utils/errorHandling';
 
 const { IS_DOCKER, WVPLAYER_PORT, WVPLAYER_ROOT_DIR, WVPLAYER_USERNAME, WVPLAYER_PASSWORD } =
   process.env;

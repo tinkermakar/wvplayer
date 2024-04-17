@@ -1,13 +1,14 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { join } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import hbs from 'hbs';
-import { Err } from './common/types';
-import { indexRouter } from './routes/index';
+import { frontRouter } from './routes/front';
+import { apiRouter } from './routes/api';
 import { loginRouter } from './routes/login';
 import { config } from './lib/config/config';
 import { authMiddleware } from './middleware/authMiddleware';
+import { Problem } from './lib/utils/errorHandling';
 
 const app = express();
 
@@ -21,26 +22,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static(join(__dirname, '..', 'src', 'public'))); // TODO move all to dist by converting to TS
+app.use(express.static(join(__dirname, '..', 'src', 'public')));
 app.use(express.static(join(__dirname, '..', 'dist', 'public')));
 
-app.get('/favicon.ico', ({}, res) => res.status(204));
+app.get('/favicon.ico', (_req, res) => res.status(204));
 app.use('/login', loginRouter);
 app.use(authMiddleware);
-app.use('/', indexRouter);
+app.use('/api', apiRouter);
+app.use('/', frontRouter);
 
-// catch 404 and forward to error handler
-app.use(({}, {}, next) => next({ status: 404 }));
-
-// error handler
-app.use((err: Err, req: Request, res: Response) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+// Error handler
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((error: Problem, _req: Request, res: Response, _next: NextFunction): void => {
+  console.error(error);
+  const { message, status, stack } = error;
+  res.status(status || 500);
+  if (res.locals.isApiError) res.json({ message, status, stack });
+  else res.render('error', { message, status, stack });
 });
 
 app.listen(config.port, async () => console.info(`🚀 Listening on port ${config.port}\n`));

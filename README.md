@@ -56,7 +56,7 @@ If you aim to access the application from other devices within your household, c
 
 ### Method 1. VIA Gnome Settings
 
-Took from: https://linuxhint.com/configure-static-ip-address-linux/
+Credit: https://linuxhint.com/configure-static-ip-address-linux/
 
 1. Go to network's preferences --> IPv4
 
@@ -75,7 +75,7 @@ Took from: https://linuxhint.com/configure-static-ip-address-linux/
 
 ### Method 2. Via Netplan
 
-Took from:
+Credit:
 
 - https://linuxize.com/post/how-to-configure-static-ip-address-on-ubuntu-20-04/
 - https://tizutech.com/ubuntu-netplan-gateway4-has-been-deprecated
