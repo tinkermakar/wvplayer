@@ -8,11 +8,6 @@ export const progressRecord = Type.Object({
 
 export type ProgressRecord = Static<typeof progressRecord>;
 
-export interface Err {
-  status?: number;
-  message?: string;
-}
-
 export interface BrokenPath {
   name: string;
   pathArr: string[];

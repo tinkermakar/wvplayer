@@ -1,14 +1,14 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { join } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import hbs from 'hbs';
-import { Err } from './lib/types/types';
 import { frontRouter } from './routes/front';
 import { apiRouter } from './routes/api';
 import { loginRouter } from './routes/login';
 import { config } from './lib/config/config';
 import { authMiddleware } from './middleware/authMiddleware';
+import { Problem } from './lib/utils/errorHandling';
 
 const app = express();
 
@@ -31,15 +31,14 @@ app.use(authMiddleware);
 app.use('/api', apiRouter);
 app.use('/', frontRouter);
 
-// error handler
-app.use((err: Err, req: Request, res: Response) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+// Error handler
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((error: Problem, _req: Request, res: Response, _next: NextFunction): void => {
+  console.error(error);
+  const { message, status, stack } = error;
+  res.status(status || 500);
+  if (res.locals.isApiError) res.json({ message, status, stack });
+  else res.render('error', { message, status, stack });
 });
 
 app.listen(config.port, async () => console.info(`🚀 Listening on port ${config.port}\n`));

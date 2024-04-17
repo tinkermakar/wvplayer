@@ -8,23 +8,24 @@ import {
 import { breakPath } from '../lib/utils/utils';
 import { progressRecord, type ProgressRecord } from '../lib/types/types';
 import { validationService } from './validationService';
+import { Problem } from '../lib/utils/errorHandling';
 
 class ProgressService extends AbstractProgressService {
   async upsert({ time, total, pathStr }: ProgressUpsertPayload) {
-    if (time && total && pathStr) {
-      const { name, progressFilePath } = breakPath(pathStr);
+    if (!time || !total || !pathStr) throw new Problem('Missing required fields', 400);
 
-      const initialFile = await this.get(progressFilePath);
+    const { name, progressFilePath } = breakPath(pathStr);
 
-      const newRecord = { name, total, time };
-      const updatedFileLessNewRecord = ProgressService.#filterOutTarget(initialFile, name);
-      const updatedFile = [...updatedFileLessNewRecord, newRecord];
+    const initialFile = await this.get(progressFilePath);
 
-      const updatedFileSorted = updatedFile.sort(ProgressService.#compare);
-      const updatedFileStringified = JSON.stringify(updatedFileSorted, null, 2);
+    const newRecord = { name, total, time };
+    const updatedFileLessNewRecord = ProgressService.#filterOutTarget(initialFile, name);
+    const updatedFile = [...updatedFileLessNewRecord, newRecord];
 
-      await ProgressService.#write(progressFilePath, updatedFileStringified);
-    }
+    const updatedFileSorted = updatedFile.sort(ProgressService.#compare);
+    const updatedFileStringified = JSON.stringify(updatedFileSorted, null, 2);
+
+    await ProgressService.#write(progressFilePath, updatedFileStringified);
   }
 
   async get(progressFilePath: string): Promise<ProgressRecord[]> {
@@ -38,7 +39,8 @@ class ProgressService extends AbstractProgressService {
 
   async delete(progressFilePath: string, name: string) {
     const initialFile = await this.get(progressFilePath);
-    if (!initialFile.length) return;
+    if (!initialFile.length) throw new Problem('No progress records found', 404);
+
     const updatedFile = ProgressService.#filterOutTarget(initialFile, name);
     if (updatedFile?.length) {
       const updatedFileStringified = JSON.stringify(updatedFile, null, 2);
