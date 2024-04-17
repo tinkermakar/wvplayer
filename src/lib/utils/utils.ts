@@ -1,17 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { Record, BrokenPath, LsPlus } from '../types/types';
+import { BrokenPath, LsPlus } from '../types/types';
 import { config } from '../config/config';
-
-export const compare = (a: Record, b: Record): number => {
-  if (a.name < b.name) {
-    return -1;
-  }
-  if (a.name > b.name) {
-    return 1;
-  }
-  return 0;
-};
 
 export const breakPath = (pathStr: string): BrokenPath => {
   const rawPathArr = decodeURI(pathStr).split('/');

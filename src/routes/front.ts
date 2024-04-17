@@ -2,7 +2,7 @@ import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
 import { breakPath, breadcrumbMaker, dirContent } from '../lib/utils/utils';
-import { Record } from '../lib/types/types';
+import { ProgressRecord } from '../lib/types/types';
 import { config } from '../lib/config/config';
 
 export const frontRouter = Router();
@@ -13,7 +13,7 @@ frontRouter.get('*mp4/player', async (req, res) => {
   let startTime = 0;
   if (fs.existsSync(progressFilePath)) {
     const progressFile = JSON.parse(fs.readFileSync(progressFilePath).toString());
-    const record = progressFile.find((el: Record) => el.name === name);
+    const record = progressFile.find((el: ProgressRecord) => el.name === name);
     if (record) startTime = record.time;
   }
 
@@ -52,7 +52,7 @@ frontRouter.get('*', async (req, res, next) => {
       let progress = null;
 
       if (isVideo) {
-        const record = progressFile?.find((el: Record) => el.name === name);
+        const record = progressFile?.find((el: ProgressRecord) => el.name === name);
         if (record) {
           const { time, total } = record;
           if (time && total) {

@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { breakPath, compare } from '../lib/utils/utils';
-import { Record } from '../lib/types/types';
+import { breakPath } from '../lib/utils/utils';
 import { config } from '../lib/config/config';
+import { validateProgressTracker } from '../middleware/validation/apiValidate';
+import { progressService } from '../services/progressService';
 
 export const apiRouter = Router();
 
@@ -49,30 +50,8 @@ apiRouter.get('*vtt', async (req, res) => {
   res.sendFile(src);
 });
 
-apiRouter.post('/progress-tracker', async (req, res) => {
+apiRouter.post('/progress-tracker', validateProgressTracker, async (req, res) => {
   const { time, total, pathStr } = req.body;
-
-  if (time && total && pathStr) {
-    const { name, progressFilePath } = breakPath(pathStr);
-
-    const initial: Record[] = fs.existsSync(progressFilePath)
-      ? JSON.parse(fs.readFileSync(progressFilePath).toString())
-      : [];
-
-    const newRecord = { name, total, time };
-    const existing: Record | undefined = initial.find((el: Record) => el.name === name);
-
-    let newFile = [];
-    if (existing) {
-      const filtered = initial.filter((el: Record) => el.name !== name);
-      newFile = [...filtered, newRecord];
-    } else newFile = [...initial, newRecord];
-
-    const newFileSorted = newFile.sort(compare);
-    const newFileFinal = JSON.stringify(newFileSorted, null, 2);
-
-    fs.writeFileSync(progressFilePath, newFileFinal);
-  }
-
-  res.json(['time-tracker']);
+  await progressService.upsert({ time, total, pathStr });
+  res.sendStatus(204);
 });

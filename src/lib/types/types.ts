@@ -1,11 +1,16 @@
+import { Type, type Static } from '@sinclair/typebox';
+
+export const progressRecord = Type.Object({
+  name: Type.String(),
+  time: Type.Number(),
+  total: Type.Number(),
+});
+
+export type ProgressRecord = Static<typeof progressRecord>;
+
 export interface Err {
   status?: number;
   message?: string;
-}
-
-export interface Record {
-  name: string;
-  time: string;
 }
 
 export interface BrokenPath {

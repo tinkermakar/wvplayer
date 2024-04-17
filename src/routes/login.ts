@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { config } from '../lib/config/config';
-import { cryptoService } from '../services/crypto';
+import { cryptoService } from '../services/cryptoService';
 
 export const loginRouter = Router();
 

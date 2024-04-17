@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { cryptoService } from '../services/crypto';
+import { cryptoService } from '../services/cryptoService';
 import { config } from '../lib/config/config';
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
