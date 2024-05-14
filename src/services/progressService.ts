@@ -29,7 +29,7 @@ class ProgressService extends AbstractProgressService {
   }
 
   async get(progressFilePath: string): Promise<ProgressRecord[]> {
-    const fileExists = await statfs(progressFilePath);
+    const fileExists = await ProgressService.#fileExists(progressFilePath);
     if (!fileExists) return [];
     const fileString = await readFile(progressFilePath);
     const recordContent = JSON.parse(fileString.toString());
@@ -62,6 +62,15 @@ class ProgressService extends AbstractProgressService {
     if (a.name > b.name) return 1;
     return 0;
   };
+
+  static async #fileExists(path: string): Promise<boolean> {
+    try {
+      await statfs(path);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
 
 export const progressService = new ProgressService();

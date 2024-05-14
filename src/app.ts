@@ -10,7 +10,7 @@ import { config } from './lib/config/config';
 import { authMiddleware } from './middleware/authMiddleware';
 import { Problem } from './lib/utils/errorHandling';
 
-const app = express();
+export const app = express();
 
 // view engine setup
 app.set('views', join(__dirname, '..', 'src', 'views'));
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, '..', 'src', 'public')));
 app.use(express.static(join(__dirname, '..', 'dist', 'public')));
 
-app.get('/favicon.ico', (_req, res) => res.status(204));
+app.get('/favicon.ico', (_req, res) => res.sendStatus(204));
 app.use('/login', loginRouter);
 app.use(authMiddleware);
 app.use('/api', apiRouter);
@@ -41,4 +41,6 @@ app.use((error: Problem, _req: Request, res: Response, _next: NextFunction): voi
   else res.render('error', { message, status, stack });
 });
 
-app.listen(config.port, async () => console.info(`🚀 Listening on port ${config.port}\n`));
+export const server = app.listen(config.port, async () =>
+  console.info(`🚀 Listening on port ${config.port}\n`),
+);
