@@ -1,6 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
+import { cryptoService } from '../../services/cryptoService';
+import { config } from '../../lib/config/config';
 import { breakPath, dirContent } from '../../lib/utils/utils';
 import { ProgressRecord } from '../../lib/types/types';
 
@@ -28,7 +30,18 @@ export const videoPlayerHandler = async (req: Request, res: Response, next: Next
       ? path.join('/', ...parentPathArr, nextVideoName, 'player')
       : null;
 
-    res.render('player', { name, dir, src, subtitleSrc, startTime, back, nextVideo });
+    const chromecastToken = cryptoService.generateToken(config.username);
+
+    res.render('player', {
+      name,
+      dir,
+      src,
+      chromecastToken,
+      subtitleSrc,
+      startTime,
+      back,
+      nextVideo,
+    });
   } catch (err) {
     next(err);
   }

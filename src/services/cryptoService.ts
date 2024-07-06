@@ -10,11 +10,15 @@ class CryptoService {
     this.#iv = iv || crypto.randomBytes(16);
   }
 
-  encrypt(data: string) {
+  #encrypt(data: string) {
     const cipher = crypto.createCipheriv(this.#algorithm, this.#key, this.#iv);
     let encrypted = cipher.update(data, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     return encrypted;
+  }
+
+  generateToken(username: string) {
+    return this.#encrypt(`${username}---${Math.random()}`);
   }
 
   decrypt(data: string) {

@@ -9,7 +9,7 @@ export const loginPostHandler = async (req: Request, res: Response, next: NextFu
     const isPasswordCorrect = username === config.username && password === config.password;
     if (!isPasswordCorrect) return res.redirect('/login');
 
-    const cookiePayload = cryptoService.encrypt(`${username}---${Math.random()}`);
+    const cookiePayload = cryptoService.generateToken(username);
 
     res.cookie('wvplayerSession', cookiePayload, { httpOnly: true, maxAge: remember && 8.64e7 });
     res.redirect(redirect || '/');
