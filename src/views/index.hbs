@@ -1,38 +1,35 @@
 <h1>File Browser</h1>
 
-<h2>Breadcrumb</h2>
-<ul>
-  {{#each breadcrumb}}
-    <li><a href='{{this.url}}'>{{this.name}}</a></li>
-  {{/each}}
-</ul>
+<main>
 
-<h2>Directories</h2>
+  <ul id="breadcrumb">
+    {{#each breadcrumb}}
+      <li><a href='{{this.url}}'>{{this.name}}</a></li>
+    {{/each}}
+  </ul>
 
-<ul>
-  {{#each directories}}
-    <li><a href='{{this.url}}'>{{this.name}}</a></li>
-  {{/each}}
-</ul>
+  <hr color="white">
 
-<h2>Videos</h2>
+  <section id="file-browser-content">
 
-<ul>
-  {{#each videos}}
-    <li>
-      <a href='{{this.url}}'>{{this.name}}</a>
-      {{#if this.progress includeZero=true}}
-        [{{this.progress}}%]
-      {{/if}}
-    </li>
-{{/each}}
-</ul>
+    <ul id="file-browser-directories">
+      {{#each directories}}
+        <li><a href='{{this.url}}'>{{this.name}}</a></li>
+      {{/each}}
+    </ul>
 
-<h2>Other</h2>
-<ul>
-  {{#each other}}
-    <li><a href='{{this.url}}'>{{this.name}}</a></li>
-  {{/each}}
-</ul>
+    <ul id="file-browser-videos">
+      {{#each videos}}
+        <li>
+          <a href='{{this.url}}'>{{this.name}}</a>
+          {{#if this.progress includeZero=true}}
+            [{{this.progress}}%]
+          {{/if}}
+        </li>
+    {{/each}}
+    </ul>
+
+  </section>
+</main>
 
 {{> footer}}

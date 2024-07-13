@@ -20,7 +20,7 @@ export const breakPath = (pathStr: string): BrokenPath => {
 };
 
 export const breadcrumbMaker = (whereAmI: string): { name: string; url: string }[] => {
-  const breadcrumb = [{ name: '/', url: '/' }];
+  const breadcrumb = [{ name: 'Home', url: '/' }];
   const { pathArr } = breakPath(whereAmI);
   for (let i = 1; i < pathArr.length; i++) {
     const name = pathArr[i];

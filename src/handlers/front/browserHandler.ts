@@ -45,10 +45,9 @@ export const browserHandler = async (req: Request, res: Response, next: NextFunc
 
       const directories = lsPlus.filter(el => el.isDir);
       const videos = lsPlus.filter(el => el.isVideo);
-      const other = lsPlus.filter(el => !el.isDir && !el.isVideo);
 
       const breadcrumb = breadcrumbMaker(webPath);
-      const output = { breadcrumb, directories, videos, other, hasProgressFile };
+      const output = { breadcrumb, directories, videos, hasProgressFile };
       // console.info(output);
       return res.render('index', output);
     }

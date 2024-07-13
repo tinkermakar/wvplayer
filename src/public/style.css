@@ -22,3 +22,36 @@ video {
 #dir {
   color: grey;
 }
+
+#breadcrumb li {
+  display: inline;
+
+  &:not(:first-child)::before {
+    content: '/';
+    margin-right: 5px;
+  }
+}
+
+section#file-browser-content {
+  li {
+    font-size: 1rem;
+    line-height: 2.5rem;
+    list-style-type: none;
+
+    a {
+      text-decoration: none;
+    }
+
+    & a::before {
+      margin-right: 10px;
+    }
+  }
+
+  ul#file-browser-directories a::before {
+    content: '🗂️';
+  }
+
+  ul#file-browser-videos a::before {
+    content: '🎬';
+  }
+}
