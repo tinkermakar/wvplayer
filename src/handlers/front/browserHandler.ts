@@ -14,6 +14,8 @@ export const browserHandler = async (req: Request, res: Response, next: NextFunc
       const progressFile = fs.existsSync(progressFilePath)
         ? JSON.parse(fs.readFileSync(progressFilePath)?.toString())
         : null;
+      const hasProgressFile = !!progressFile;
+
       const ls = fs.readdirSync(fullPath);
       const lsPlus = ls.map(name => {
         const isDir = !fs.statSync(path.join(fullPath, name)).isFile();
@@ -46,7 +48,7 @@ export const browserHandler = async (req: Request, res: Response, next: NextFunc
       const other = lsPlus.filter(el => !el.isDir && !el.isVideo);
 
       const breadcrumb = breadcrumbMaker(webPath);
-      const output = { breadcrumb, directories, videos, other };
+      const output = { breadcrumb, directories, videos, other, hasProgressFile };
       // console.info(output);
       return res.render('index', output);
     }
