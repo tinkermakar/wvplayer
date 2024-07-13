@@ -1,0 +1,14 @@
+<footer>
+  <br />
+  <br />
+
+  {{#if hasProgressFile}}
+    <form method='POST' action='{{url}}'>
+      <button type='submit' value='reset-progress'>Reset Progress</button>
+    </form>
+  {{/if}}
+
+  <form action='/login/logout' method='post'>
+    <input type='submit' value='Logout' />
+  </form>
+</footer>

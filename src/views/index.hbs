@@ -35,10 +35,4 @@
   {{/each}}
 </ul>
 
-{{#if this.hasProgressFile}}
-  <form method="POST" action="{{this.url}}">
-  <button type="submit" value="reset-progress">Reset Progress</button>
-</form>
-{{/if}}
-
-{{> logout}}
+{{> footer}}

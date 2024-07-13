@@ -41,6 +41,7 @@ export const videoPlayerHandler = async (req: Request, res: Response, next: Next
       startTime,
       back,
       nextVideo,
+      hasProgressFile: true,
     });
   } catch (err) {
     next(err);
