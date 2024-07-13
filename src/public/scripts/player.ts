@@ -33,8 +33,17 @@ if (video) {
     }
   }, 10 * 1000);
 
+  video.addEventListener('ratechange', () => {
+    const newPlaybackSpeed = video.playbackRate.toString();
+    localStorage.setItem('playbackSpeed', newPlaybackSpeed);
+    console.info(`🚶‍♂️‍➡️ new playback speed: ${newPlaybackSpeed}`);
+  });
+
+  const savedPlaybackSpeed = localStorage.getItem('playbackSpeed');
+  if (savedPlaybackSpeed) video.playbackRate = parseFloat(savedPlaybackSpeed);
+
   // Always focus the video
-  const focuser: () => void = () => video?.focus();
+  const focuser: () => void = () => video.focus();
   document.addEventListener('keydown', focuser);
   document.addEventListener('click', focuser);
 
