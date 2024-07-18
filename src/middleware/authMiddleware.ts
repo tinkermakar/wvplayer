@@ -18,10 +18,22 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   if (!token) return res.redirect(redirectUrl);
 
   const decrypted = cryptoService.decrypt(token);
-  const username = decrypted?.split('---')?.[0];
-  if (username !== config.username) {
+  const [username, tokenDateStr] = decrypted?.split('&') ?? [];
+
+  if (!username || !tokenDateStr || username !== config.username) {
     res.clearCookie('wvplayerSession');
     return res.redirect(redirectUrl);
+  }
+
+  if (chromecastToken) {
+    const now = new Date().getTime();
+    const tokenDate = new Date(tokenDateStr).getTime();
+    const expiryPeriod = 3 * 60 * 60 * 1000; // 3 hours
+
+    if (now - tokenDate > expiryPeriod) {
+      res.clearCookie('wvplayerSession');
+      return res.sendStatus(440);
+    }
   }
   next();
 };

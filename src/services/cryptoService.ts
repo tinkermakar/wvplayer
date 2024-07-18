@@ -18,13 +18,15 @@ class CryptoService {
   }
 
   generateToken(username: string) {
-    return this.#encrypt(`${username}---${Math.random()}`);
+    if (username.includes('&')) throw new Error('Invalid username');
+    const date = `${new Date().toISOString().slice(0, 16)}Z`;
+    return this.#encrypt(`${username}&${date}&${Math.random()}`);
   }
 
   decrypt(data: string) {
     const decipher = crypto.createDecipheriv(this.#algorithm, this.#key, this.#iv);
     let decrypted = decipher.update(data, 'hex', 'utf8');
-    if (!decrypted?.includes('---')) return null;
+    if (!decrypted?.includes('&')) return null;
 
     decrypted += decipher.final('utf8');
     return decrypted;
