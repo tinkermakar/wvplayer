@@ -24,8 +24,6 @@ video {
 }
 
 #breadcrumb li {
-  display: inline;
-
   &:not(:first-child)::before {
     content: '/';
     margin-right: 5px;
@@ -35,23 +33,20 @@ video {
 section#file-browser-content {
   li {
     font-size: 1rem;
-    line-height: 2.5rem;
-    list-style-type: none;
+    line-height: 1.5rem;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
 
     a {
       text-decoration: none;
     }
-
-    & a::before {
-      margin-right: 10px;
-    }
   }
 
-  ul#file-browser-directories a::before {
+  ul#file-browser-directories li::marker {
     content: '🗂️';
   }
 
-  ul#file-browser-videos a::before {
+  ul#file-browser-videos li::marker {
     content: '🎬';
   }
 }

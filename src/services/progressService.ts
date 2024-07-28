@@ -12,7 +12,7 @@ import { Problem } from '../lib/utils/errorHandling';
 
 class ProgressService extends AbstractProgressService {
   async upsert({ time, total, pathStr }: ProgressUpsertPayload) {
-    if (!time || !total || !pathStr) throw new Problem('Missing required fields', 400);
+    if (!pathStr) throw new Problem('Missing file path', 400);
 
     const { name, progressFilePath } = breakPath(pathStr);
 
