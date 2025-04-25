@@ -1,6 +1,6 @@
 {
   "name": "web-video-player",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "main": "dist/app",
   "repository": {
     "type": "git",
@@ -37,13 +37,8 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "pre-commit": "^1.2.2",
     "prettier": "^3.2.5",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"
-  },
-  "pre-commit": [
-    "prettier",
-    "lint"
-  ]
+  }
 }
