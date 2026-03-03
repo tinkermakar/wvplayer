@@ -9,6 +9,7 @@ services:
       - $WVPLAYER_ROOT_DIR:/usr/src/wvplayer-data
     ports:
       - '127.0.0.1:$WVPLAYER_PORT:3000'
+    restart: unless-stopped
     logging:
       driver: json-file
       options:
