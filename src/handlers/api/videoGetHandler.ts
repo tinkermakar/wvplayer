@@ -16,7 +16,7 @@ export const videoGetHandler = async (req: Request, res: Response, next: NextFun
 
     const { range } = req.headers;
     if (range) {
-      const CHUNK_SIZE = 10 ** 6; // 1MB
+      const CHUNK_SIZE = 32 * 10 ** 6; // 32MB
       const start = Number(range?.replace(/\D/g, ''));
       const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
       const contentLength = end - start + 1;
