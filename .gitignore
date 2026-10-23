@@ -132,4 +132,3 @@ dist
 # CUSTOM ADDED
 videos
 daemon/wvplayer.service
-.env.prod

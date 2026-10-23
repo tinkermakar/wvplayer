@@ -4,13 +4,17 @@
 </video>
 
 <br />
-<br />
-<button type="button" class="player-seek seek-minus">-10s</button>
-<button type="button" class="player-seek seek-plus">+10s</button>
+
+<div class='player-controls'>
+  <button type='button' class='player-seek seek-minus'>-10s</button>
+  <button type='button' class='player-seek seek-plus'>+10s</button>
+</div>
 <h1><span id='dir'>{{dir}} /</span> {{name}}</h1>
 <a id='back-button' href='{{back}}'><button>Back</button></a>
+
 <br />
 <br />
+
 {{#if nextVideo}}
   <a id='next-button' href='{{nextVideo}}'><button>Next</button></a>
 {{/if}}

@@ -1,8 +1,8 @@
 import fs from 'fs';
-import { Request, Response, NextFunction } from 'express';
-import { breakPath } from '../../lib/utils/utils';
-import { ProgressRecord } from '../../lib/types/types';
-import { progressService } from '../../services/progressService';
+import type { Request, Response, NextFunction } from 'express';
+import { breakPath } from '../../lib/utils/utils.ts';
+import type { ProgressRecord } from '../../lib/types/types.ts';
+import { progressService } from '../../services/progressService.ts';
 
 export const resetVideoHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {

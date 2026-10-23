@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { BrokenPath, LsPlus } from '../types/types';
-import { config } from '../config/config';
+import type { BrokenPath, LsPlus } from '../types/types.ts';
+import { config } from '../config/config.ts';
 
 export const breakPath = (pathStr: string): BrokenPath => {
   const rawPathArr = decodeURI(pathStr).split('/');

@@ -5,6 +5,8 @@
 **/docker-compose*
 **/Dockerfile*
 **/node_modules
+**/.env
+**/.env.*
 LICENSE
 README.md
 daemon/

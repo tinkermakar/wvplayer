@@ -1,5 +1,5 @@
 import { Type, type Static } from '@sinclair/typebox';
-import { ProgressRecord } from '../types/types';
+import type { ProgressRecord } from '../types/types.ts';
 
 export const progressUpsertPayload = Type.Object({
   time: Type.Number(),

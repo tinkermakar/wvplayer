@@ -7,11 +7,7 @@ const video: HTMLVideoElement | null = document.getElementById(
 ) as HTMLVideoElement | null;
 if (video) {
   video.currentTime = startTime;
-  try {
-    video.play();
-  } catch (err) {
-    console.error('>>> autoplay failed');
-  }
+  video.play().catch(console.error);
 
   let timeOnFile: number = startTime;
 
@@ -42,10 +38,36 @@ if (video) {
   const savedPlaybackSpeed = localStorage.getItem('playbackSpeed');
   if (savedPlaybackSpeed) video.playbackRate = parseFloat(savedPlaybackSpeed);
 
-  // Always focus the video
-  const focuser: () => void = () => video.focus();
-  document.addEventListener('keydown', focuser);
-  document.addEventListener('click', focuser);
+  const seek = (seconds: number) => {
+    if (!Number.isFinite(video.duration)) return;
+    video.currentTime = Math.max(0, Math.min(video.duration, video.currentTime + seconds));
+  };
+
+  document.addEventListener(
+    'keydown',
+    event => {
+      const target = event.target as HTMLElement;
+      if (target.closest('input, textarea, select, [contenteditable]')) return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (!['ArrowLeft', 'ArrowRight', ' '].includes(event.key)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.key === 'ArrowLeft') seek(-10);
+      else if (event.key === 'ArrowRight') seek(10);
+      else if (!event.repeat) {
+        if (video.paused) video.play().catch(console.error);
+        else video.pause();
+      }
+    },
+    true,
+  );
+
+  document.querySelectorAll('.player-seek').forEach(button => {
+    button.addEventListener('click', () => {
+      seek(button.classList.contains('seek-plus') ? 10 : -10);
+    });
+  });
 
   // Play next video
   if (nextVideo) {
@@ -54,13 +76,3 @@ if (video) {
     });
   }
 }
-
-document.querySelectorAll('.player-seek')?.forEach(el =>
-  el.addEventListener('click', e => {
-    const targetButton = e?.target as HTMLElement;
-    if (targetButton && video) {
-      if (targetButton.classList.contains('seek-plus')) video.currentTime += 10;
-      else video.currentTime -= 10;
-    }
-  }),
-);

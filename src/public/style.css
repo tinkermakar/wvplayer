@@ -14,7 +14,8 @@ a {
 }
 
 video {
-  max-height: 100vh;
+  display: block;
+  max-height: calc(100vh - 44px);
   outline: 0;
   width: 100%;
 }

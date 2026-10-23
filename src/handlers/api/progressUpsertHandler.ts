@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { progressService } from '../../services/progressService';
+import type { Request, Response, NextFunction } from 'express';
+import { progressService } from '../../services/progressService.ts';
 
 export const progressUpsertHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {

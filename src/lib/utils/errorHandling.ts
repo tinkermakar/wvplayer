@@ -1,4 +1,5 @@
 export class Problem extends Error {
+  headers?: Record<string, string>;
   #status = 500;
   constructor(message: string, status?: number) {
     super(message);

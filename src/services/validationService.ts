@@ -1,6 +1,6 @@
-import { TObject } from '@sinclair/typebox';
+import type { TObject } from '@sinclair/typebox';
 import { TypeCompiler } from '@sinclair/typebox/compiler';
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 
 class ValidationService {
   // eslint-disable-next-line class-methods-use-this

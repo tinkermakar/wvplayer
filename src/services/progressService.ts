@@ -3,12 +3,12 @@ import { readFile, statfs, unlink, writeFile } from 'node:fs/promises';
 
 import {
   AbstractProgressService,
-  ProgressUpsertPayload,
-} from '../lib/abstractions/AbstractProgressService';
-import { breakPath } from '../lib/utils/utils';
-import { progressRecord, type ProgressRecord } from '../lib/types/types';
-import { validationService } from './validationService';
-import { Problem } from '../lib/utils/errorHandling';
+  type ProgressUpsertPayload,
+} from '../lib/abstractions/AbstractProgressService.ts';
+import { breakPath } from '../lib/utils/utils.ts';
+import { progressRecord, type ProgressRecord } from '../lib/types/types.ts';
+import { validationService } from './validationService.ts';
+import { Problem } from '../lib/utils/errorHandling.ts';
 
 class ProgressService extends AbstractProgressService {
   async upsert({ time, total, pathStr }: ProgressUpsertPayload) {

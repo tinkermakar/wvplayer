@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import { Request, Response, NextFunction } from 'express';
-import { breadcrumbMaker } from '../../lib/utils/utils';
-import { config } from '../../lib/config/config';
-import { ProgressRecord } from '../../lib/types/types';
+import type { Request, Response, NextFunction } from 'express';
+import { breadcrumbMaker } from '../../lib/utils/utils.ts';
+import { config } from '../../lib/config/config.ts';
+import type { ProgressRecord } from '../../lib/types/types.ts';
 
 export const browserHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {

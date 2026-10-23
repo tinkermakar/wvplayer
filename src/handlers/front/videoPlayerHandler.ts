@@ -1,10 +1,10 @@
 import path from 'path';
 import fs from 'fs';
-import { Request, Response, NextFunction } from 'express';
-import { cryptoService } from '../../services/cryptoService';
-import { config } from '../../lib/config/config';
-import { breakPath, dirContent } from '../../lib/utils/utils';
-import { ProgressRecord } from '../../lib/types/types';
+import type { Request, Response, NextFunction } from 'express';
+import { cryptoService } from '../../services/cryptoService.ts';
+import { config } from '../../lib/config/config.ts';
+import { breakPath, dirContent } from '../../lib/utils/utils.ts';
+import type { ProgressRecord } from '../../lib/types/types.ts';
 
 export const videoPlayerHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {

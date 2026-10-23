@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd "$(dirname "$0")/.."
-npm run start:prod
+NODE_ENV=production npm start

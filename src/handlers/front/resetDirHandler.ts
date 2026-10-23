@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import { Request, Response, NextFunction } from 'express';
-import { config } from '../../lib/config/config';
+import type { Request, Response, NextFunction } from 'express';
+import { config } from '../../lib/config/config.ts';
 
 export const resetDirHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {

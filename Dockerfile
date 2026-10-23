@@ -1,16 +1,11 @@
-FROM node:20-alpine AS builder
-WORKDIR /usr/src/app
-COPY . .
-RUN npm install && npx tsc
-
-FROM node:20-alpine
-ENV NODE_ENV=prod
+FROM node:24-alpine
+ENV IS_DOCKER=true
+ENV NODE_ENV=production
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install --productioon && chown -R node /usr/src/app/node_modules
+RUN npm ci --omit=dev
 COPY --chown=node:node . .
-COPY --chown=node:node --from=builder /usr/src/app/dist/ ./dist
 
 USER node
 EXPOSE 3000
-CMD ["npm", "run", "start:prod:docker"]
+CMD ["npm", "run", "start:docker"]

@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
-import { cryptoService } from '../services/cryptoService';
-import { config } from '../lib/config/config';
+import type { NextFunction, Request, Response } from 'express';
+import { cryptoService } from '../services/cryptoService.ts';
+import { config } from '../lib/config/config.ts';
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const cookieValue = req.cookies.wvplayerSession;

@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import path from 'path';
-import { breakPath } from '../../lib/utils/utils';
-import { config } from '../../lib/config/config';
+import { breakPath } from '../../lib/utils/utils.ts';
+import { config } from '../../lib/config/config.ts';
 
 export const subtitlesGetHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {

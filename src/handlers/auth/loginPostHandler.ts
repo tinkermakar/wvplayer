@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { config } from '../../lib/config/config';
-import { cryptoService } from '../../services/cryptoService';
+import type { Request, Response, NextFunction } from 'express';
+import { config } from '../../lib/config/config.ts';
+import { cryptoService } from '../../services/cryptoService.ts';
 
 export const loginPostHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
